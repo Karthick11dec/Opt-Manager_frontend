@@ -11,6 +11,9 @@ function App() {
 			<Title />
 			<Navbar />
 			<Switch>
+				<Route path='/' exact>
+					<GenerateOTP />
+				</Route>
 				<Route path='/generate' exact>
 					<GenerateOTP />
 				</Route>
