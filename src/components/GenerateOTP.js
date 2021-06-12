@@ -12,6 +12,15 @@ const GenerateOTP = () => {
 		M.AutoInit();
 	});
 
+	const validate = () => {
+		let time = new Date().toLocaleTimeString().split(":");
+		let [h, m, s] = time;
+		let maradian = s.split(" ");
+		const full = [h, m, maradian].flat(1);
+		// console.log(full)
+		return full;
+	}
+
 	const handleGenerateOTP = async () => {
 		// console.log(mail)
 		if (!mail) {
@@ -27,13 +36,14 @@ const GenerateOTP = () => {
 						"Content-Type": "application/json"
 					},
 					body: JSON.stringify({
-						email: mail
+						email: mail,
+						time : validate()
 					})
 				})
 				let res = await data.json();
 				if (res.data) {
 					const M = window.M;
-					M.toast({ html: 'OTP ghas been sent to your mail' });
+					M.toast({ html: 'OTP has been sent to your mail' });
 					setLoading(false);
 					history.push('/verify')
 					// window.location.href = `https://otp-manager-frontend.netlify.app/verify`;

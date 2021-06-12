@@ -42,6 +42,7 @@ const VerifyOTP = () => {
 					})
 				})
 				let res = await data.json();
+				console.log(res)
 				if (res.result === true) {
 					const M = window.M;
 					M.toast({ html: 'OTP Matched' });
