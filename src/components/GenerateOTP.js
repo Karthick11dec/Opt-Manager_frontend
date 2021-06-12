@@ -1,9 +1,11 @@
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 
 const GenerateOTP = () => {
 	const [mail, setmail] = useState('');
 	const [isLoading, setLoading] = useState(false);
+
+	const history = useHistory();
 
 	useEffect(() => {
 		const M = window.M;
@@ -19,7 +21,7 @@ const GenerateOTP = () => {
 		else {
 			if (mail.includes('@') && mail.includes('.com')) {
 				setLoading(true);
-				let data = await fetch('http://localhost:5000/generate', {
+				let data = await fetch('https://opt-manager.herokuapp.com/generate', {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json"
@@ -33,7 +35,8 @@ const GenerateOTP = () => {
 					const M = window.M;
 					M.toast({ html: 'OTP ghas been sent to your mail' });
 					setLoading(false);
-					window.location.href = `http://localhost:3000/verify`;
+					history.push('/verify')
+					// window.location.href = `https://otp-manager-frontend.netlify.app/verify`;
 				}
 			} else {
 				const M = window.M;

@@ -30,7 +30,7 @@ const VerifyOTP = () => {
 				M.toast({ html: 'OTP should containes 6 digits' });
 			} else {
 				setLoading(true);
-				let data = await fetch('http://localhost:5000/verify', {
+				let data = await fetch('https://opt-manager.herokuapp.com/verify', {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json"
