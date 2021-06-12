@@ -1,42 +1,48 @@
 import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
-// import { generateOTP } from './npm-module';
-import { FRONTEND_ENDPOINT } from './endpoint';
-import otpManager from 'otp-manager-node';
 
 const GenerateOTP = () => {
-	const [email, setEmail] = useState('');
+	const [mail, setmail] = useState('');
 	const [isLoading, setLoading] = useState(false);
+
 	useEffect(() => {
 		const M = window.M;
 		M.AutoInit();
 	});
+
 	const handleGenerateOTP = async () => {
-		if (!email) {
+		// console.log(mail)
+		if (!mail) {
 			const M = window.M;
 			M.toast({ html: 'Input Should not be empty' });
-		} else {
-			if (email.includes('@') && email.includes('.')) {
+		}
+		else {
+			if (mail.includes('@') && mail.includes('.com')) {
 				setLoading(true);
-				let data = { email };
-				console.log(data);
-				const response = await otpManager.generateOTP(email);
-				console.log(response);
-				if (response.message === 'created') {
+				let data = await fetch('http://localhost:5000/generate', {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+						email: mail
+					})
+				})
+				let res = await data.json();
+				if (res.data) {
 					const M = window.M;
-					M.toast({ html: 'Email Sent to your Client' });
-				} else {
-					const M = window.M;
-					M.toast({ html: response.message });
+					M.toast({ html: 'OTP ghas been sent to your mail' });
+					setLoading(false);
+					window.location.href = `http://localhost:3000/verify`;
 				}
-				setLoading(false);
-				window.location.href = `${FRONTEND_ENDPOINT}/verify`;
 			} else {
 				const M = window.M;
 				M.toast({ html: 'Invalid Email' });
 			}
 		}
 	};
+
+
 	return (
 		<div className='generate-otp container'>
 			<div className='row'>
@@ -48,8 +54,8 @@ const GenerateOTP = () => {
 									id='email'
 									type='email'
 									className='validate'
-									value={email}
-									onChange={(e) => setEmail(e.target.value)}
+									value={mail}
+									onChange={(e) => setmail(e.target.value)}
 								/>
 								<label htmlFor='email'>Email</label>
 							</div>

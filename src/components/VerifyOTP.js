@@ -1,41 +1,63 @@
 import { Link } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
-// import { verifyOTP } from './npm-module';
-import otpManager from 'otp-manager-node';
+import React, {  useState } from 'react';
 
 const VerifyOTP = () => {
-	const [email, setEmail] = useState('');
-	const [otp, setOpt] = useState('');
-	useEffect(() => {
-		const M = window.M;
-		M.AutoInit();
-	});
+
+	const [mail, setmail] = useState('');
+	const [Otp, setOpt] = useState('');
+	const [isLoading, setLoading] = useState(false);
+
+	const validate = () => {
+		let time = new Date().toLocaleTimeString().split(":");
+		let [h, m, s] = time;
+		let maradian = s.split(" ");
+		const full = [h, m, maradian].flat(1);
+		// console.log(full)
+		return full;
+	}
+
 	const verifyData = async () => {
-		if (!email || !otp) {
+		if (!mail || !Otp) {
 			const M = window.M;
 			M.toast({ html: 'Input Should not be empty' });
-		} else {
-			if (!email.includes('@') || !email.includes('.')) {
+		}
+		else {
+			if (!mail.includes('@') || !mail.includes('.com')) {
 				const M = window.M;
 				M.toast({ html: 'Invalid Email' });
-			} else if (otp.toString().length !== 6) {
+			} else if (Otp.toString().length !== 6) {
 				const M = window.M;
-				M.toast({ html: 'OTP should containen 6 digits' });
+				M.toast({ html: 'OTP should containes 6 digits' });
 			} else {
-				let data = { email, otp };
-				console.log(data);
-				const response = await otpManager.verifyOTP(email, otp);
-				console.log(response);
-				if (response.result) {
+				setLoading(true);
+				let data = await fetch('http://localhost:5000/verify', {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+						email: mail,
+						otp: Otp,
+						time: validate()
+					})
+				})
+				let res = await data.json();
+				if (res.result === true) {
 					const M = window.M;
 					M.toast({ html: 'OTP Matched' });
-				} else {
-					const M = window.M;
-					M.toast({ html: response.message });
+					window.location.replace("https://www.google.com/")
 				}
+				else {
+					const M = window.M;
+					M.toast({ html: `${res.message}.so,GO back to Genarate option and Genarate a OTP and use it for further process` });
+					// alert(`${res.message}.so,GO back to Genarate option and Genarate a OTP and use it for further process`)
+				}
+				setLoading(false);
 			}
 		}
 	};
+
+
 	return (
 		<div className='verify-otp'>
 			<div className='generate-otp container'>
@@ -48,8 +70,8 @@ const VerifyOTP = () => {
 										id='email'
 										type='email'
 										className='validate'
-										value={email}
-										onChange={(e) => setEmail(e.target.value)}
+										value={mail}
+										onChange={(e) => setmail(e.target.value)}
 									/>
 									<label htmlFor='email'>Email</label>
 								</div>
@@ -58,13 +80,13 @@ const VerifyOTP = () => {
 										id='otp'
 										type='number'
 										className='validate'
-										value={otp}
+										value={Otp}
 										onChange={(e) => setOpt(e.target.value)}
 									/>
 									<label htmlFor='otp'>OTP</label>
 								</div>
 								<div className='center'>
-									<Link className='waves-effect waves-light btn ' onClick={verifyData}>
+									<Link className='waves-effect waves-light btn ' onClick={verifyData} disabled={isLoading ? true : false} >
 										Verify OTP
 									</Link>
 								</div>
