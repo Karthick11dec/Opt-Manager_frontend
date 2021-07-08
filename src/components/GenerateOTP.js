@@ -2,6 +2,7 @@ import { Link, useHistory } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 
 const GenerateOTP = () => {
+
 	const [mail, setmail] = useState('');
 	const [isLoading, setLoading] = useState(false);
 
@@ -12,22 +13,16 @@ const GenerateOTP = () => {
 		M.AutoInit();
 	});
 
-	const validate = () => {
-		let time = new Date().toLocaleTimeString().split(":");
-		let [h, m, s] = time;
-		let maradian = s.split(" ");
-		const full = [h, m, maradian].flat(1);
-		// console.log(full)
-		return full;
-	}
-
 	const handleGenerateOTP = async () => {
-		// console.log(mail)
+
 		if (!mail) {
+
 			const M = window.M;
-			M.toast({ html: 'Input Should not be empty' });
+			M.toast({ html: 'Input Should not be empty..!' });
+
 		}
 		else {
+
 			if (mail.includes('@') && mail.includes('.com')) {
 				setLoading(true);
 				let data = await fetch('https://opt-manager.herokuapp.com/generate', {
@@ -36,21 +31,30 @@ const GenerateOTP = () => {
 						"Content-Type": "application/json"
 					},
 					body: JSON.stringify({
-						email: mail,
-						time : validate()
+						email: mail
 					})
 				})
 				let res = await data.json();
-				if (res.data) {
+				if (res.datas) {
+
 					const M = window.M;
-					M.toast({ html: 'OTP has been sent to your mail' });
+					M.toast({ html: 'OTP has been sent to your mail..!' });
 					setLoading(false);
-					history.push('/verify')
-					// window.location.href = `https://otp-manager-frontend.netlify.app/verify`;
+					history.push('/verify');
+
 				}
+				else {
+
+					const M = window.M;
+					M.toast({ html: `${res.message}..!` });
+
+				}
+
 			} else {
+
 				const M = window.M;
-				M.toast({ html: 'Invalid Email' });
+				M.toast({ html: 'Invalid Email..!' });
+
 			}
 		}
 	};

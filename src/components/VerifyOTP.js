@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import React, {  useState } from 'react';
+import React, { useState } from 'react';
 
 const VerifyOTP = () => {
 
@@ -7,28 +7,28 @@ const VerifyOTP = () => {
 	const [Otp, setOpt] = useState('');
 	const [isLoading, setLoading] = useState(false);
 
-	const validate = () => {
-		let time = new Date().toLocaleTimeString().split(":");
-		let [h, m, s] = time;
-		let maradian = s.split(" ");
-		const full = [h, m, maradian].flat(1);
-		// console.log(full)
-		return full;
-	}
-
 	const verifyData = async () => {
+
 		if (!mail || !Otp) {
+
 			const M = window.M;
-			M.toast({ html: 'Input Should not be empty' });
+			M.toast({ html: 'Input Should not be empty..!' });
+
 		}
 		else {
+
 			if (!mail.includes('@') || !mail.includes('.com')) {
+
 				const M = window.M;
-				M.toast({ html: 'Invalid Email' });
+				M.toast({ html: 'Invalid Email..!' });
+
 			} else if (Otp.toString().length !== 6) {
+
 				const M = window.M;
-				M.toast({ html: 'OTP should containes 6 digits' });
+				M.toast({ html: 'OTP should containes 6 digits..!' });
+
 			} else {
+
 				setLoading(true);
 				let data = await fetch('https://opt-manager.herokuapp.com/verify', {
 					method: "POST",
@@ -37,21 +37,22 @@ const VerifyOTP = () => {
 					},
 					body: JSON.stringify({
 						email: mail,
-						otp: Otp,
-						time: validate()
+						otp: Otp
 					})
 				})
 				let res = await data.json();
-				console.log(res)
 				if (res.result === true) {
+
 					const M = window.M;
-					M.toast({ html: 'OTP Matched' });
-					window.location.replace("https://www.google.com/")
+					M.toast({ html: 'OTP Matched..!' });
+					window.location.replace("https://www.google.com/");
+
 				}
 				else {
+
 					const M = window.M;
-					M.toast({ html: `${res.message}.so,GO back to Genarate option and Genarate a OTP and use it for further process` });
-					// alert(`${res.message}.so,GO back to Genarate option and Genarate a OTP and use it for further process`)
+					M.toast({ html: `${res.message}..!` });
+
 				}
 				setLoading(false);
 			}
