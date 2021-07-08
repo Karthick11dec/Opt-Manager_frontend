@@ -26,8 +26,8 @@ const GenerateOTP = () => {
 			if (mail.includes('@') && mail.includes('.com')) {
 
 				setLoading(true);
-				// https://opt-manager.herokuapp.com/
-				let data = await fetch('http://localhost:5000/generate', {
+
+				let data = await fetch('https://opt-manager.herokuapp.com/generate', {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json"
