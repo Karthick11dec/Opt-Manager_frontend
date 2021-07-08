@@ -24,8 +24,10 @@ const GenerateOTP = () => {
 		else {
 
 			if (mail.includes('@') && mail.includes('.com')) {
+
 				setLoading(true);
-				let data = await fetch('https://opt-manager.herokuapp.com/generate', {
+				// https://opt-manager.herokuapp.com/
+				let data = await fetch('http://localhost:5000/generate', {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json"
@@ -40,7 +42,9 @@ const GenerateOTP = () => {
 					const M = window.M;
 					M.toast({ html: 'OTP has been sent to your mail..!' });
 					setLoading(false);
-					history.push('/verify');
+					setTimeout(() => {
+						history.push('/verify');
+					}, 3000);
 
 				}
 				else {

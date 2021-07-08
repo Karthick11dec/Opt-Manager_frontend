@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import React, { useState } from 'react';
 
 const VerifyOTP = () => {
@@ -6,6 +6,8 @@ const VerifyOTP = () => {
 	const [mail, setmail] = useState('');
 	const [Otp, setOpt] = useState('');
 	const [isLoading, setLoading] = useState(false);
+
+	const history = useHistory();
 
 	const verifyData = async () => {
 
@@ -30,7 +32,8 @@ const VerifyOTP = () => {
 			} else {
 
 				setLoading(true);
-				let data = await fetch('https://opt-manager.herokuapp.com/verify', {
+				// https://opt-manager.herokuapp.com/
+				let data = await fetch('http://localhost:5000/verify', {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json"
@@ -45,13 +48,18 @@ const VerifyOTP = () => {
 
 					const M = window.M;
 					M.toast({ html: 'OTP Matched..!' });
-					window.location.replace("https://www.google.com/");
+					setTimeout(() => {
+						window.location.replace("https://www.google.com/");
+					}, 3000);
 
 				}
 				else {
 
 					const M = window.M;
 					M.toast({ html: `${res.message}..!` });
+					setTimeout(() => {
+						history.replace('/generate');
+					}, 3000);
 
 				}
 				setLoading(false);
